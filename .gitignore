@@ -72,3 +72,28 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# VsCode workspace files
+.vscode/*.code-workspace
+.vscode/launch.json
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/extensions.json
+.vscode/*.sln
+.vscode/*.suo
+.vscode/*.user
+.vscode/*.userprefs
+.vscode/*.pidb
+.vscode/*.booproj
+.vscode/*.svd
+.vscode/*.pdb
+.vscode/*.mdb
+.vscode/*.opendb
+.vscode/*.VC.db
+.vscode/*.pidb.meta
+.vscode/*.pdb.meta
+.vscode/*.mdb.meta
+.vscode/*.opendb.meta
+.vscode/*.VC.db.meta
+.vscode/*.sln.meta
+.vscode/*.suo.meta
