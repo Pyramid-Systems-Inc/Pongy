@@ -1,3 +1,0 @@
-Paddle hitting the ball (e.g., a "blip" or "pong" sound)
-Ball hitting the top/bottom walls (e.g., a slightly different "blip")
-Scoring a point (e.g., a short positive chime or fanfare)
