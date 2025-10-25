@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 3
   tags:
   - 'Enemy '
+  - PlayerGoal
+  - EnemyGoal
   layers:
   - Default
   - TransparentFX
