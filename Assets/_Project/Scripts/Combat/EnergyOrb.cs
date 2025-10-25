@@ -1,4 +1,5 @@
 using UnityEngine;
+using PongQuest.RPG;
 
 namespace PongQuest.Combat
 {
@@ -23,6 +24,9 @@ namespace PongQuest.Combat
         [Tooltip("How much hitting the paddle edge affects angle (0-1)")]
         [SerializeField] private float deflectionStrength = 0.7f;
 
+        [Header("Damage Settings")]
+        [SerializeField] private int baseDamage = 10;
+
         [Header("Debug")]
         [SerializeField] private bool showDebugLogs = true;
 
@@ -33,6 +37,7 @@ namespace PongQuest.Combat
         // State
         private float currentSpeed;
         private bool isLaunched = false;
+        private string lastHitBy = ""; // "Player" or "Enemy"
 
         private void Awake()
         {
@@ -178,6 +183,8 @@ namespace PongQuest.Combat
 
             // Apply velocity
             rb.linearVelocity = newDirection.normalized * currentSpeed;
+            // Track who last hit the ball
+            lastHitBy = collision.gameObject.tag; // Will be "Player" or "Enemy"
 
             if (showDebugLogs)
             {
@@ -201,7 +208,81 @@ namespace PongQuest.Combat
         {
             currentSpeed = baseSpeed;
         }
+        /// <summary>
+        /// Detect when ball enters a goal zone
+        /// </summary>
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            // Check if we hit a goal zone
+            if (collision.CompareTag("PlayerGoal"))
+            {
+                // Ball went past player - Enemy scores if enemy hit it last
+                if (lastHitBy == "Enemy")
+                {
+                    DealDamageToPlayer();
+                }
+                ResetAfterGoal();
+            }
+            else if (collision.CompareTag("EnemyGoal"))
+            {
+                // Ball went past enemy - Player scores if player hit it last
+                if (lastHitBy == "Player")
+                {
+                    DealDamageToEnemy();
+                }
+                ResetAfterGoal();
+            }
+        }
 
+        /// <summary>
+        /// Deal damage to the player
+        /// </summary>
+        private void DealDamageToPlayer()
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+            {
+                Health playerHealth = playerObj.GetComponent<Health>();
+                if (playerHealth != null)
+                {
+                    playerHealth.TakeDamage(baseDamage);
+
+                    if (showDebugLogs)
+                        Debug.Log($"[EnergyOrb] Player took {baseDamage} damage!");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Deal damage to the enemy
+        /// </summary>
+        private void DealDamageToEnemy()
+        {
+            GameObject enemyObj = GameObject.FindGameObjectWithTag("Enemy");
+            if (enemyObj != null)
+            {
+                Health enemyHealth = enemyObj.GetComponent<Health>();
+                if (enemyHealth != null)
+                {
+                    enemyHealth.TakeDamage(baseDamage);
+
+                    if (showDebugLogs)
+                        Debug.Log($"[EnergyOrb] Enemy took {baseDamage} damage!");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reset ball after a goal
+        /// </summary>
+        private void ResetAfterGoal()
+        {
+            ResetToCenter();
+            lastHitBy = "";
+
+            // Relaunch after short delay
+            Invoke(nameof(Launch), 1.5f);
+        }
         // Visualize direction in editor
         private void OnDrawGizmos()
         {

@@ -623,6 +623,7 @@ MonoBehaviour:
   launchAngleMax: 45
   launchTowardsPlayer: 1
   deflectionStrength: 0.7
+  baseDamage: 10
   showDebugLogs: 1
 --- !u!1 &662367790
 GameObject:
@@ -1113,7 +1114,7 @@ GameObject:
   - component: {fileID: 1347977483}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Player
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
