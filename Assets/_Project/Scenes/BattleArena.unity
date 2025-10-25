@@ -596,6 +596,7 @@ GameObject:
   - component: {fileID: 481230681}
   - component: {fileID: 481230683}
   - component: {fileID: 481230682}
+  - component: {fileID: 481230684}
   m_Layer: 5
   m_Name: EnemyHP_Background
   m_TagString: Untagged
@@ -662,6 +663,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 481230680}
   m_CullTransparentMesh: 1
+--- !u!114 &481230684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 481230680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54a21eaeb480508448bce3e06474d893, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PongQuest.UI.HealthBarUI
+  targetHealth: {fileID: 1347977483}
+  fillImage: {fileID: 1477769157}
+  labelText: {fileID: 100271516}
+  showNumbers: 1
+  labelPrefix: 'ENEMY:'
+  smoothTransition: 1
+  smoothSpeed: 10
 --- !u!1 &618181510
 GameObject:
   m_ObjectHideFlags: 0
@@ -1230,6 +1250,7 @@ GameObject:
   - component: {fileID: 807519624}
   - component: {fileID: 807519626}
   - component: {fileID: 807519625}
+  - component: {fileID: 807519627}
   m_Layer: 5
   m_Name: PlayerHP_Background
   m_TagString: Untagged
@@ -1296,6 +1317,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 807519623}
   m_CullTransparentMesh: 1
+--- !u!114 &807519627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807519623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54a21eaeb480508448bce3e06474d893, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PongQuest.UI.HealthBarUI
+  targetHealth: {fileID: 662367796}
+  fillImage: {fileID: 1486780472}
+  labelText: {fileID: 1176697601}
+  showNumbers: 1
+  labelPrefix: 'PLAYER:'
+  smoothTransition: 1
+  smoothSpeed: 10
 --- !u!1 &1071297242
 GameObject:
   m_ObjectHideFlags: 0
