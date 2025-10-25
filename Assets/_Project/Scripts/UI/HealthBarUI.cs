@@ -35,6 +35,14 @@ namespace PongQuest.UI
                 UpdateHealthBar(targetHealth.CurrentHP, targetHealth.MaxHP);
             }
         }
+        private void Start()
+        {
+            // Force update on start to ensure UI displays correctly
+            if (targetHealth != null)
+            {
+                UpdateHealthBar(targetHealth.CurrentHP, targetHealth.MaxHP);
+            }
+        }
 
         private void OnDisable()
         {
