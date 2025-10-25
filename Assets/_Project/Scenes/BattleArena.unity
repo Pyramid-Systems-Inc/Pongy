@@ -478,6 +478,7 @@ GameObject:
   - component: {fileID: 662367791}
   - component: {fileID: 662367794}
   - component: {fileID: 662367793}
+  - component: {fileID: 662367796}
   - component: {fileID: 662367795}
   m_Layer: 0
   m_Name: Player
@@ -648,6 +649,22 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &662367796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662367790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c68c557b870e9a345bb64921b474ea30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PongQuest.RPG.Health
+  maxHP: 100
+  currentHP: 0
+  isInvulnerable: 0
+  showDebugLogs: 1
 --- !u!1 &1071297242
 GameObject:
   m_ObjectHideFlags: 0
@@ -935,6 +952,7 @@ GameObject:
   - component: {fileID: 1347977479}
   - component: {fileID: 1347977477}
   - component: {fileID: 1347977482}
+  - component: {fileID: 1347977483}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Player
@@ -1103,6 +1121,22 @@ MonoBehaviour:
   moveSpeed: 30
   reactionDelay: 0.01
   ball: {fileID: 618648804}
+--- !u!114 &1347977483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1347977476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c68c557b870e9a345bb64921b474ea30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PongQuest.RPG.Health
+  maxHP: 100
+  currentHP: 0
+  isInvulnerable: 0
+  showDebugLogs: 1
 --- !u!1 &1727385159
 GameObject:
   m_ObjectHideFlags: 0
