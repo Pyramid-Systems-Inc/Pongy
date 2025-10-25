@@ -26,6 +26,8 @@ namespace PongQuest.Combat
 
         [Header("Damage Settings")]
         [SerializeField] private int baseDamage = 10;
+        [SerializeField] private float powerDamageMultiplier = 0.5f; // PWR increases damage
+        [SerializeField] private float powerSpeedBoost = 0.3f; // PWR increases ball speed
 
         [Header("Debug")]
         [SerializeField] private bool showDebugLogs = true;
@@ -181,8 +183,24 @@ namespace PongQuest.Combat
                 Mathf.Sin(bounceAngle)
             );
 
+            // Apply velocity with power boost
+            float finalSpeed = currentSpeed;
+
+            // Check if the paddle has stats (Player/Enemy might have CharacterStats)
+            CharacterStats paddleStats = collision.gameObject.GetComponent<CharacterStats>();
+            if (paddleStats != null)
+            {
+                // Power increases ball speed
+                float powerBoost = paddleStats.Power.GetValue() * powerSpeedBoost;
+                finalSpeed += powerBoost;
+
+                if (showDebugLogs)
+                    Debug.Log($"[EnergyOrb] Power boost applied: +{powerBoost:F1} speed (PWR: {paddleStats.Power.GetValue()})");
+            }
+
             // Apply velocity
-            rb.linearVelocity = newDirection.normalized * currentSpeed;
+            rb.linearVelocity = newDirection.normalized * finalSpeed;
+
             // Track who last hit the ball
             lastHitBy = collision.gameObject.tag; // Will be "Player" or "Enemy"
 
@@ -267,10 +285,13 @@ namespace PongQuest.Combat
                 Health playerHealth = playerObj.GetComponent<Health>();
                 if (playerHealth != null)
                 {
-                    playerHealth.TakeDamage(baseDamage);
+                    // Calculate damage (base damage + power modifier from enemy)
+                    int finalDamage = CalculateDamage("Enemy");
+
+                    playerHealth.TakeDamage(finalDamage);
 
                     if (showDebugLogs)
-                        Debug.Log($"[EnergyOrb] Player took {baseDamage} damage!");
+                        Debug.Log($"[EnergyOrb] Player took {finalDamage} damage!");
                 }
             }
         }
@@ -286,12 +307,36 @@ namespace PongQuest.Combat
                 Health enemyHealth = enemyObj.GetComponent<Health>();
                 if (enemyHealth != null)
                 {
-                    enemyHealth.TakeDamage(baseDamage);
+                    // Calculate damage (base damage + power modifier from player)
+                    int finalDamage = CalculateDamage("Player");
+
+                    enemyHealth.TakeDamage(finalDamage);
 
                     if (showDebugLogs)
-                        Debug.Log($"[EnergyOrb] Enemy took {baseDamage} damage!");
+                        Debug.Log($"[EnergyOrb] Enemy took {finalDamage} damage!");
                 }
             }
+        }
+        /// <summary>
+        /// Calculate damage based on attacker's Power stat
+        /// </summary>
+        private int CalculateDamage(string attackerTag)
+        {
+            int damage = baseDamage;
+
+            GameObject attacker = GameObject.FindGameObjectWithTag(attackerTag);
+            if (attacker != null)
+            {
+                CharacterStats attackerStats = attacker.GetComponent<CharacterStats>();
+                if (attackerStats != null)
+                {
+                    // Power increases damage
+                    float powerBonus = attackerStats.Power.GetValue() * powerDamageMultiplier;
+                    damage += Mathf.RoundToInt(powerBonus);
+                }
+            }
+
+            return Mathf.Max(1, damage); // Minimum 1 damage
         }
 
         /// <summary>

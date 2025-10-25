@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using PongQuest.RPG;
 
 namespace PongQuest.Combat
 {
@@ -11,8 +12,11 @@ namespace PongQuest.Combat
     public class PlayerAegis : MonoBehaviour
     {
         [Header("Movement Settings")]
-        [SerializeField] private float moveSpeed = 8f;
+        [SerializeField] private float baseMoveSpeed = 8f;
         [SerializeField] private bool constrainToVertical = true;
+
+        [Header("Stat Scaling")]
+        [SerializeField] private float agilityMultiplier = 0.5f;
 
         [Header("Boundary Constraints")]
         [SerializeField] private float minY = -3.5f;
@@ -21,6 +25,7 @@ namespace PongQuest.Combat
         // Components
         private Rigidbody2D rb;
         private Controls controls;
+        private CharacterStats stats;
 
         // Input
         private Vector2 moveInput;
@@ -28,6 +33,7 @@ namespace PongQuest.Combat
         private void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
+            stats = GetComponent<CharacterStats>();
 
             // Configure Rigidbody2D for tight control
             rb.bodyType = RigidbodyType2D.Kinematic;
@@ -63,17 +69,27 @@ namespace PongQuest.Combat
 
         private void HandleMovement()
         {
+            // Calculate actual move speed based on stats
+            float actualMoveSpeed = baseMoveSpeed;
+
+            if (stats != null)
+            {
+                // AGI increases movement speed
+                // Formula: baseMoveSpeed + (Agility * multiplier)
+                actualMoveSpeed = baseMoveSpeed + (stats.Agility.GetValue() * agilityMultiplier);
+            }
+
             Vector2 velocity;
 
             if (constrainToVertical)
             {
                 // Only allow vertical movement (classic Pong)
-                velocity = new Vector2(0f, moveInput.y * moveSpeed);
+                velocity = new Vector2(0f, moveInput.y * actualMoveSpeed);
             }
             else
             {
                 // Allow full 2D movement (for future arena hazards)
-                velocity = moveInput * moveSpeed;
+                velocity = moveInput * actualMoveSpeed;
             }
 
             rb.linearVelocity = velocity;

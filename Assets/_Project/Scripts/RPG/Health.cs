@@ -14,8 +14,14 @@ namespace PongQuest.RPG
         [SerializeField] private int currentHP;
         [SerializeField] private bool isInvulnerable = false;
 
+        [Header("Stat Scaling")]
+        [SerializeField] private float gritDamageReduction = 0.25f; // How much GRT reduces damage
+
         [Header("Debug")]
         [SerializeField] private bool showDebugLogs = true;
+
+        //Components
+        private CharacterStats stats;
 
         // Events
         public event Action<int, int> OnHealthChanged; // (currentHP, maxHP)
@@ -33,7 +39,15 @@ namespace PongQuest.RPG
         private void Awake()
         {
             // Initialize HP to max on start
-            currentHP = maxHP;
+            if (currentHP == 0)
+            {
+                currentHP = maxHP;
+            }
+
+            stats = GetComponent<CharacterStats>();
+
+            // Trigger initial event
+            OnHealthChanged?.Invoke(currentHP, maxHP);
         }
 
         /// <summary>
@@ -43,14 +57,26 @@ namespace PongQuest.RPG
         {
             if (isInvulnerable || IsDead) return;
 
+            int originalDamage = damage;
+
+            // Apply Grit damage reduction
+            if (stats != null)
+            {
+                float damageReduction = stats.Grit.GetValue() * gritDamageReduction;
+                damage -= Mathf.RoundToInt(damageReduction);
+
+                if (showDebugLogs)
+                    Debug.Log($"[Health] Grit reduced damage by {damageReduction:F1} (GRT: {stats.Grit.GetValue()})");
+            }
+
             // Ensure damage is at least 1
             damage = Mathf.Max(1, damage);
 
             currentHP -= damage;
-            currentHP = Mathf.Max(0, currentHP); // Prevent negative HP
+            currentHP = Mathf.Max(0, currentHP);
 
             if (showDebugLogs)
-                Debug.Log($"[Health] {gameObject.name} took {damage} damage. HP: {currentHP}/{maxHP}");
+                Debug.Log($"[Health] {gameObject.name} took {damage} damage ({originalDamage} before Grit). HP: {currentHP}/{maxHP}");
 
             // Trigger events
             OnDamageTaken?.Invoke(damage);

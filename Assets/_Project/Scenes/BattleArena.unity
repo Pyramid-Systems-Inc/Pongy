@@ -972,9 +972,10 @@ GameObject:
   - component: {fileID: 662367792}
   - component: {fileID: 662367791}
   - component: {fileID: 662367794}
+  - component: {fileID: 662367795}
   - component: {fileID: 662367793}
   - component: {fileID: 662367796}
-  - component: {fileID: 662367795}
+  - component: {fileID: 662367797}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1159,6 +1160,23 @@ MonoBehaviour:
   maxHP: 100
   currentHP: 0
   isInvulnerable: 0
+  showDebugLogs: 1
+--- !u!114 &662367797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662367790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55ba3706c642ca74dbbde4645c6bc9e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PongQuest.RPG.CharacterStats
+  basePower: 10
+  baseAgility: 10
+  baseGrit: 10
+  baseFocus: 10
   showDebugLogs: 1
 --- !u!1 &677860349
 GameObject:
@@ -1760,6 +1778,7 @@ GameObject:
   - component: {fileID: 1347977477}
   - component: {fileID: 1347977482}
   - component: {fileID: 1347977483}
+  - component: {fileID: 1347977484}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -1943,6 +1962,23 @@ MonoBehaviour:
   maxHP: 100
   currentHP: 0
   isInvulnerable: 0
+  showDebugLogs: 1
+--- !u!114 &1347977484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1347977476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55ba3706c642ca74dbbde4645c6bc9e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PongQuest.RPG.CharacterStats
+  basePower: 8
+  baseAgility: 12
+  baseGrit: 8
+  baseFocus: 10
   showDebugLogs: 1
 --- !u!1 &1477769155
 GameObject:
