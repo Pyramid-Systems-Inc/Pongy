@@ -190,6 +190,7 @@ namespace PongQuest.Combat
             {
                 Debug.Log($"[EnergyOrb] Hit {collision.gameObject.name} at relative Y: {relativeIntersectY:F2}, " +
                           $"Bounce angle: {bounceAngle * Mathf.Rad2Deg:F1}°");
+                Debug.Log($"[EnergyOrb] lastHitBy set to: '{lastHitBy}'"); // <-- ADD THIS LINE
             }
         }
 
@@ -213,24 +214,45 @@ namespace PongQuest.Combat
         /// </summary>
         private void OnTriggerEnter2D(Collider2D collision)
         {
+            Debug.Log($"[EnergyOrb] TRIGGER DETECTED with: {collision.gameObject.name} (Tag: {collision.tag})");
+            Debug.Log($"[EnergyOrb] Last hit by: '{lastHitBy}'");
+
             // Check if we hit a goal zone
             if (collision.CompareTag("PlayerGoal"))
             {
+                Debug.Log("[EnergyOrb] Hit PLAYER GOAL ZONE");
+
                 // Ball went past player - Enemy scores if enemy hit it last
                 if (lastHitBy == "Enemy")
                 {
+                    Debug.Log("[EnergyOrb] Enemy scored! Dealing damage to player...");
                     DealDamageToPlayer();
+                }
+                else
+                {
+                    Debug.Log($"[EnergyOrb] No damage dealt. Last hit by: '{lastHitBy}' (expected 'Enemy')");
                 }
                 ResetAfterGoal();
             }
             else if (collision.CompareTag("EnemyGoal"))
             {
+                Debug.Log("[EnergyOrb] Hit ENEMY GOAL ZONE");
+
                 // Ball went past enemy - Player scores if player hit it last
                 if (lastHitBy == "Player")
                 {
+                    Debug.Log("[EnergyOrb] Player scored! Dealing damage to enemy...");
                     DealDamageToEnemy();
                 }
+                else
+                {
+                    Debug.Log($"[EnergyOrb] No damage dealt. Last hit by: '{lastHitBy}' (expected 'Player')");
+                }
                 ResetAfterGoal();
+            }
+            else
+            {
+                Debug.Log($"[EnergyOrb] Trigger was not a goal zone. Tag: {collision.tag}");
             }
         }
 
@@ -280,8 +302,19 @@ namespace PongQuest.Combat
             ResetToCenter();
             lastHitBy = "";
 
+            // Disable ball briefly to prevent immediate re-trigger
+            circleCollider.enabled = false;
+
             // Relaunch after short delay
-            Invoke(nameof(Launch), 1.5f);
+            Invoke(nameof(ReenableBallAndLaunch), 1.5f);
+        }
+        /// <summary>
+        /// Re-enable the ball and launch it
+        /// </summary>
+        private void ReenableBallAndLaunch()
+        {
+            circleCollider.enabled = true;
+            Launch();
         }
         // Visualize direction in editor
         private void OnDrawGizmos()
