@@ -344,14 +344,18 @@ namespace PongQuest.Combat
         /// </summary>
         private void ResetAfterGoal()
         {
+            // Cancel any pending relaunches
+            CancelInvoke(nameof(ReenableBallAndLaunch));
+            CancelInvoke(nameof(Launch));
+
             ResetToCenter();
             lastHitBy = "";
 
             // Disable ball briefly to prevent immediate re-trigger
             circleCollider.enabled = false;
 
-            // Relaunch after short delay
-            Invoke(nameof(ReenableBallAndLaunch), 1.5f);
+            // Relaunch after delay
+            Invoke(nameof(ReenableBallAndLaunch), 2f); // Increased from 1.5f
         }
         /// <summary>
         /// Re-enable the ball and launch it

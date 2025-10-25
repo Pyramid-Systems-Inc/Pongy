@@ -180,7 +180,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 8}
+  m_Size: {x: 1, y: 12}
   m_EdgeRadius: 0
 --- !u!4 &89422977
 Transform:
@@ -191,7 +191,7 @@ Transform:
   m_GameObject: {fileID: 89422975}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7, y: 0.30153, z: 0}
+  m_LocalPosition: {x: 7, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -496,7 +496,7 @@ Transform:
   m_GameObject: {fileID: 313755309}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: 0.30153, z: 0}
+  m_LocalPosition: {x: -7, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -546,7 +546,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 8}
+  m_Size: {x: 1, y: 12}
   m_EdgeRadius: 0
 --- !u!1 &323830296
 GameObject:
@@ -957,9 +957,11 @@ MonoBehaviour:
   maxSpeed: 15
   launchAngleMin: -45
   launchAngleMax: 45
-  launchTowardsPlayer: 1
+  launchTowardsPlayer: 0
   deflectionStrength: 0.7
   baseDamage: 10
+  powerDamageMultiplier: 0.5
+  powerSpeedBoost: 0.3
   showDebugLogs: 1
 --- !u!1 &662367790
 GameObject:
@@ -1068,8 +1070,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80669eeb4dceae94ca4d648da1cad801, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PongQuest.Combat.PlayerAegis
-  moveSpeed: 8
+  baseMoveSpeed: 8
   constrainToVertical: 1
+  agilityMultiplier: 0.5
   minY: -3.5
   maxY: 3.5
 --- !u!50 &662367794
@@ -1160,6 +1163,7 @@ MonoBehaviour:
   maxHP: 100
   currentHP: 0
   isInvulnerable: 0
+  gritDamageReduction: 0.25
   showDebugLogs: 1
 --- !u!114 &662367797
 MonoBehaviour:
@@ -1944,9 +1948,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9e54d84177be32488a2b3631e8e3fd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PongQuest.Combat.SimpleEnemyAI
-  moveSpeed: 30
-  reactionDelay: 0.01
+  baseMoveSpeed: 6
+  reactionSpeed: 8
+  agilityMultiplier: 0.5
   ball: {fileID: 618648804}
+  minY: -3.5
+  maxY: 3.5
 --- !u!114 &1347977483
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1962,6 +1969,7 @@ MonoBehaviour:
   maxHP: 100
   currentHP: 0
   isInvulnerable: 0
+  gritDamageReduction: 0.25
   showDebugLogs: 1
 --- !u!114 &1347977484
 MonoBehaviour:
