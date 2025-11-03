@@ -4,19 +4,25 @@ using Unity.Cinemachine;
 namespace PongQuest.Combat
 {
     /// <summary>
-    /// Triggers camera shake effects via Cinemachine Impulse.
+    /// Triggers camera shake effects via Cinemachine 3.
+    /// Uses coroutines to temporarily boost noise.
     /// </summary>
     public class CameraShake : MonoBehaviour
     {
         public static CameraShake Instance { get; private set; }
 
-        [Header("Impulse Sources")]
-        [SerializeField] private CinemachineImpulseSource damageShake;
-        [SerializeField] private CinemachineImpulseSource paddleHitShake;
+        [Header("References")]
+        [SerializeField] private CinemachineCamera virtualCamera;
 
-        [Header("Shake Intensities")]
-        [SerializeField] private float damageShakeForce = 1.2f;
-        [SerializeField] private float paddleHitShakeForce = 0.3f;
+        [Header("Shake Settings")]
+        [SerializeField] private float damageShakeIntensity = 3f;
+        [SerializeField] private float damageShakeDuration = 0.3f;
+        [SerializeField] private float paddleHitShakeIntensity = 0.8f;
+        [SerializeField] private float paddleHitShakeDuration = 0.1f;
+
+        private CinemachineBasicMultiChannelPerlin noise;
+        private float shakeTimer;
+        private float currentShakeIntensity;
 
         private void Awake()
         {
@@ -27,24 +33,47 @@ namespace PongQuest.Combat
             }
             Instance = this;
 
-            // Create impulse sources if not assigned
-            if (damageShake == null)
+            // Auto-find virtual camera if not assigned
+            if (virtualCamera == null)
             {
-                damageShake = gameObject.AddComponent<CinemachineImpulseSource>();
-                ConfigureImpulse(damageShake, 0.2f);
+                virtualCamera = FindFirstObjectByType<CinemachineCamera>();
             }
 
-            if (paddleHitShake == null)
+            // Get the noise component
+            if (virtualCamera != null)
             {
-                paddleHitShake = gameObject.AddComponent<CinemachineImpulseSource>();
-                ConfigureImpulse(paddleHitShake, 0.1f);
+                noise = virtualCamera.GetComponent<CinemachineBasicMultiChannelPerlin>();
+
+                if (noise == null)
+                {
+                    Debug.LogWarning("[CameraShake] No CinemachineBasicMultiChannelPerlin found on camera. Adding it now...");
+                    noise = virtualCamera.gameObject.AddComponent<CinemachineBasicMultiChannelPerlin>();
+                }
+            }
+            else
+            {
+                Debug.LogError("[CameraShake] No CinemachineCamera found in scene!");
             }
         }
 
-        private void ConfigureImpulse(CinemachineImpulseSource impulse, float duration)
+        private void Update()
         {
-            impulse.ImpulseDefinition.ImpulseDuration = duration;
-            impulse.DefaultVelocity = Vector3.one;
+            // Decay shake over time
+            if (shakeTimer > 0)
+            {
+                shakeTimer -= Time.deltaTime;
+
+                if (noise != null)
+                {
+                    // Gradually reduce amplitude
+                    float amplitude = Mathf.Lerp(0f, currentShakeIntensity, shakeTimer / damageShakeDuration);
+                    noise.AmplitudeGain = amplitude;
+                }
+            }
+            else if (noise != null)
+            {
+                noise.AmplitudeGain = 0f;
+            }
         }
 
         /// <summary>
@@ -52,10 +81,7 @@ namespace PongQuest.Combat
         /// </summary>
         public void ShakeOnDamage(float intensity = 1f)
         {
-            if (damageShake != null)
-            {
-                damageShake.GenerateImpulse(damageShakeForce * intensity);
-            }
+            TriggerShake(damageShakeIntensity * intensity, damageShakeDuration);
         }
 
         /// <summary>
@@ -63,21 +89,24 @@ namespace PongQuest.Combat
         /// </summary>
         public void ShakeOnPaddleHit(float intensity = 1f)
         {
-            if (paddleHitShake != null)
-            {
-                paddleHitShake.GenerateImpulse(paddleHitShakeForce * intensity);
-            }
+            TriggerShake(paddleHitShakeIntensity * intensity, paddleHitShakeDuration);
         }
 
         /// <summary>
-        /// Custom shake with specific force
+        /// Custom shake with specific force and duration
         /// </summary>
-        public void ShakeCustom(float force)
+        public void ShakeCustom(float intensity, float duration)
         {
-            if (damageShake != null)
-            {
-                damageShake.GenerateImpulse(force);
-            }
+            TriggerShake(intensity, duration);
+        }
+
+        private void TriggerShake(float intensity, float duration)
+        {
+            if (noise == null) return;
+
+            currentShakeIntensity = intensity;
+            shakeTimer = duration;
+            noise.AmplitudeGain = intensity;
         }
     }
 }
