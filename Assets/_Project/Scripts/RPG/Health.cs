@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using PongQuest.Combat;
 
 namespace PongQuest.RPG
 {
@@ -64,6 +65,12 @@ namespace PongQuest.RPG
             {
                 float damageReduction = stats.Grit.GetValue() * gritDamageReduction;
                 damage -= Mathf.RoundToInt(damageReduction);
+
+                // Trigger screen shake
+                if (CameraShake.Instance != null && gameObject.CompareTag("Player"))
+                {
+                    CameraShake.Instance.ShakeOnDamage();
+                }
 
                 if (showDebugLogs)
                     Debug.Log($"[Health] Grit reduced damage by {damageReduction:F1} (GRT: {stats.Grit.GetValue()})");

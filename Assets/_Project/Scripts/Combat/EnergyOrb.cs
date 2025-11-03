@@ -204,6 +204,12 @@ namespace PongQuest.Combat
             // Track who last hit the ball
             lastHitBy = collision.gameObject.tag; // Will be "Player" or "Enemy"
 
+            // Trigger small screen shake on paddle hit
+            if (CameraShake.Instance != null)
+            {
+                CameraShake.Instance.ShakeOnPaddleHit();
+            }
+
             if (showDebugLogs)
             {
                 Debug.Log($"[EnergyOrb] Hit {collision.gameObject.name} at relative Y: {relativeIntersectY:F2}, " +
