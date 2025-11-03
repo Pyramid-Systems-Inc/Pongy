@@ -11,6 +11,10 @@ namespace PongQuest.Combat
     [RequireComponent(typeof(CircleCollider2D))]
     public class EnergyOrb : MonoBehaviour
     {
+        [Header("Game Feel")]
+        [SerializeField] private bool enableHitstop = true;
+        [SerializeField] private float hitstopDuration = 0.05f;
+
         [Header("Movement Settings")]
         [SerializeField] private float baseSpeed = 7f;
         [SerializeField] private float maxSpeed = 15f;
@@ -204,6 +208,12 @@ namespace PongQuest.Combat
             // Track who last hit the ball
             lastHitBy = collision.gameObject.tag; // Will be "Player" or "Enemy"
 
+            // Hitstop for impact feel
+            if (enableHitstop && gameObject.CompareTag("Player"))
+            {
+                StartCoroutine(Hitstop(hitstopDuration));
+            }
+
             // Trigger small screen shake on paddle hit
             if (CameraShake.Instance != null)
             {
@@ -371,6 +381,17 @@ namespace PongQuest.Combat
             circleCollider.enabled = true;
             Launch();
         }
+
+        /// <summary>
+        /// Brief time freeze for game feel
+        /// </summary>
+        private System.Collections.IEnumerator Hitstop(float duration)
+        {
+            Time.timeScale = 0f;
+            yield return new WaitForSecondsRealtime(duration);
+            Time.timeScale = 1f;
+        }
+
         // Visualize direction in editor
         private void OnDrawGizmos()
         {
